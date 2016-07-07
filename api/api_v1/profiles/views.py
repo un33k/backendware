@@ -29,7 +29,6 @@ User = get_user_model()
 
 
 class ProfileViewMixin(object):
-    queryset = User.objects.all()
     serializer_class = ProfileReadAnonymousSerializer
     permission_classes = (IsAuthenticated, IsOwner,)
     throttle_classes = (BurstRateThrottle, SustainedRateThrottle,)
@@ -43,10 +42,10 @@ class ProfileViewMixin(object):
     def get_queryset(self):
         if self.request.method == "GET":
             if not self.request.user.is_superuser:
-                return User.objects.filter(is_active=True, is_superuser=False)
+                return self.queryset.filter(is_active=True, is_superuser=False)
             if not self.request.user.is_staff:
-                return User.objects.filter(is_active=True, is_superuser=False, is_staff=False)
-        return self.queryset
+                return self.queryset.filter(is_active=True, is_superuser=False, is_staff=False)
+        return User.objects.all()
 
 
 class ProfileListAPIView(ProfileViewMixin, generics.ListAPIView):
