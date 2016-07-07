@@ -42,9 +42,9 @@ class ProfileViewMixin(object):
     def get_queryset(self):
         if self.request.method == "GET":
             if not self.request.user.is_superuser:
-                return self.queryset.filter(is_active=True, is_superuser=False)
+                return User.objects.filter(is_active=True, is_superuser=False)
             if not self.request.user.is_staff:
-                return self.queryset.filter(is_active=True, is_superuser=False, is_staff=False)
+                return User.objects.filter(is_active=True, is_superuser=False, is_staff=False)
         return User.objects.all()
 
 
